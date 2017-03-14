@@ -1,0 +1,17 @@
+{
+  "extends": [
+    "tslint-react"
+  ],
+  "rules": {
+    "quotemark": [
+      true,
+      "double",
+      "jsx-double"
+    ],
+    "jsx-alignment": false,
+    "jsx-self-close": false,
+    "jsx-no-string-ref": true,
+    "jsx-no-lambda": false,
+    "jsx-no-multiline-js": false
+  }
+}
