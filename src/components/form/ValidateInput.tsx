@@ -30,7 +30,7 @@ export class ValidateInput extends React.Component<Props, {}> {
   render() {
     const { validator, data, onChange, className, ...others } = this.props;
     return (
-      <Input {...others} placeholder="搜索"
+      <Input {...others}
         className={classname(className, { invalid: !data.isvalid })}
         value={data.value}
         onChange={e => this.onChange(e.target.value)}

@@ -1,6 +1,9 @@
 import * as React from "react";
 import { axios, pub } from "../utils"
 import { Input, Select, Table, Button, MessageBox, Dialog } from "element-react";
+import { ValidateInput } from "../components/index";
+import { Link, } from "react-router-dom";
+
 
 function getColumn(ctx) {
   return [
@@ -14,7 +17,7 @@ function getColumn(ctx) {
       render(rowdata) {
         return (
           <span>
-            <Button type="text" size="small">详情</Button>
+            <Link to={`/apps/${rowdata._id}`}>详情</Link>
           </span>
         )
       }
@@ -22,6 +25,9 @@ function getColumn(ctx) {
   ]
 }
 
+const onlyChars = (e) => {
+  return /^[a-z_-]+$/i.test(e);
+}
 
 const request = axios.get();
 export class AppList extends React.Component<any, any>{
@@ -30,11 +36,29 @@ export class AppList extends React.Component<any, any>{
   constructor(props) {
     super(props);
     this._serverData = props.serverData;
-    this.state = {}
+    this.state = {
+      textData: { value: "", isvalid: false }
+    }
   }
 
   newApp() {
     this.setState({ dialogVisible: true })
+  }
+
+  saveNewApp() {
+    if (!this.state.textData.isvalid) {
+      return;
+    }
+
+    request.post("/apps", { name: this.state.textData.value }).then(resp => {
+      pub.success("操作成功")
+      this.toggleDialog(false)
+      this.load()
+    }).catch(pub.handleAjaxRequestError)
+  }
+
+  toggleDialog(dialogVisible: boolean) {
+    this.setState({ dialogVisible })
   }
 
   componentWillMount() {
@@ -57,11 +81,12 @@ export class AppList extends React.Component<any, any>{
   }
 
   render() {
-    const { data } = this.state;
+    const { data, textData } = this.state;
     if (!data) return null;
 
     return (
       <div>
+        <h2>APP列表</h2>
         <div className="action-panel">
           <Button onClick={_ => this.newApp()}>创建APP</Button>
         </div>
@@ -77,11 +102,23 @@ export class AppList extends React.Component<any, any>{
         <Dialog
           title="创建APP"
           visible={this.state.dialogVisible}
-          onCancel={() => this.setState({ dialogVisible: false })}
+          onCancel={() => this.toggleDialog(false)}
         >
           <Dialog.Body>
-            <div>some shit</div>
+            <div>
+              <div>
+                <label htmlFor="name">
+                  名称(<span className="text-sm">格式: 字符_-</span>):
+                </label>
+                <ValidateInput id="name" data={textData} onChange={data => this.setState({ textData: data })} validator={onlyChars}></ValidateInput>
+              </div>
+            </div>
           </Dialog.Body>
+
+          <Dialog.Footer className="dialog-footer">
+            <Button onClick={() => this.toggleDialog(false)}>取 消</Button>
+            <Button type="primary" onClick={_ => this.saveNewApp()} disabled={!textData.isvalid}>确 定</Button>
+          </Dialog.Footer>
         </Dialog>
       </div>
     )

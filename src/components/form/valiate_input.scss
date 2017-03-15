@@ -1,9 +1,6 @@
-.el-input{
-  &.invalid {
-    .el-input__inner {
-      border-color: red;
-    }
+.invalid {
+  .el-input__inner, .el-textarea__inner {
+    border-color: red;
   }
 }
-
 

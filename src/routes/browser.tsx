@@ -10,7 +10,7 @@ import { Provider } from "react-redux";
 
 
 import { redux } from "../utils"
-import { AppList, AppShell } from "../pages"
+import { AppList, AppShell, AppDetail, CaseDetail } from "../pages"
 
 
 
@@ -21,6 +21,8 @@ export function getRoutes() {
       <HashRouter>
         <Switch>
           <AppShell exact strict path="/" component={AppList} />
+          <AppShell path="/apps/:id" component={AppDetail} />
+          <AppShell path="/cases/:id" component={CaseDetail} />
         </Switch>
       </HashRouter>
     </Provider>
