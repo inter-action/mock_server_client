@@ -1,6 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
+import { Provider } from "react-redux";
+
 import {
   BrowserRouter as Router,
   Route,
@@ -10,7 +12,8 @@ import {
   // etc.
 } from "react-router-dom";
 
-import { Home } from "./pages"
+import { redux } from "./utils"
+import { getRoutes } from "./routes/browser";
 
 if (!document.querySelector("#app")) {
   const root = document.createElement("div");
@@ -18,13 +21,13 @@ if (!document.querySelector("#app")) {
   document.body.appendChild(root);
 }
 
-let target = document.querySelector("#app");
-if (!target.hasChildNodes()) {
-  // http://stackoverflow.com/questions/42095600/nested-routes-in-v4
+init();
+
+function init() {
+  let target = document.querySelector("#app");
+  if (target.hasChildNodes()) return;
   ReactDOM.render(
-    <Router>
-      <Route path="/" component={Home}></Route>
-    </Router>
-    , document.querySelector("#app")
+    getRoutes(),
+    document.querySelector("#app")
   );
 }

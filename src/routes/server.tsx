@@ -3,10 +3,12 @@ import * as path from "path";
 import * as fs from "fs";
 
 import * as React from "react";
-import { Home } from "../pages";
-import * as ReactDOMServer from 'react-dom/server';
-import { StaticRouter } from 'react-router';
-// import * as koa from 'koa';
+
+import * as ReactDOMServer from "react-dom/server";
+import { StaticRouter } from "react-router";
+
+import { AppList } from "../pages";
+// import * as koa from "koa";
 
 import {
   BrowserRouter as Router,
@@ -96,7 +98,7 @@ export default function (logger) {
     // let urlobj = url.parse(ctx.url);
     // logger.debug("urlobj, ", urlobj)
     // if (urlobj.pathname && /\.html$/i, urlobj.pathname) {
-    //   urlobj.pathname = urlobj.pathname.replace(/\.html$/i, '');
+    //   urlobj.pathname = urlobj.pathname.replace(/\.html$/i, "");
     // }
     // let targetUrl = url.format(urlobj)
     // logger.debug("after format, ", targetUrl)
@@ -104,9 +106,9 @@ export default function (logger) {
     const html = ReactDOMServer.renderToString(
       <StaticRouter location={targetUrl} context={context}>
         <Switch>
-          <RouteWithServerData path="/index.html" exact component={Home} serverData={serverData} />
+          <RouteWithServerData path="/index.html" exact component={AppList} serverData={serverData} />
           <Redirect from="/old-match.html" to="/will-match.html" />
-          <Route path="/will-match.html" component={Home} />
+          <Route path="/will-match.html" component={AppList} />
           <Route component={NoMatch} />
         </Switch>
       </StaticRouter>

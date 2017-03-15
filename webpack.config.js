@@ -30,7 +30,13 @@ const config = {
             limit: '10000'
           }
         }
-      }]
+      },
+      {
+        test: /\.svg/,
+        use: ['svg-url-loader']
+      }
+    ],
+
   },
   plugins: [//dot not delete this
     new HtmlWebpackPlugin({
