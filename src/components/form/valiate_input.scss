@@ -1,0 +1,9 @@
+.el-input{
+  &.invalid {
+    .el-input__inner {
+      border-color: red;
+    }
+  }
+}
+
+
