@@ -1,7 +1,40 @@
-#app {
+
+@import "./styles/reset";
+
+body{
+  font-family: "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei";
+}
+
+#app, #root-wrap {
   height: 100%;
+}
+
+#root-wrap{
+  max-width: 80%;
+  margin: 0 auto;
+  margin-top: 1em;
 }
 
 .text-sm{
   font-size: .6em;
+}
+
+h1 {
+  font-size: 2.5em;
+}
+h2{
+  font-size: 2em;
+}
+
+h3 {
+  font-size: 1.5em;
+}
+
+h4 {
+  font-size: 1.2em;
+}
+
+a.action{
+  margin: 2px;
+  text-decoration: none;
 }

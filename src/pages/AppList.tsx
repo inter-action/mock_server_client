@@ -1,9 +1,12 @@
 import * as React from "react";
 import { axios, pub } from "../utils"
-import { Input, Select, Table, Button, MessageBox, Dialog } from "element-react";
+import { Input, Select, Table, Button, MessageBox, Dialog, Breadcrumb } from "element-react";
 import { ValidateInput } from "../components/index";
 import { Link, } from "react-router-dom";
 
+
+import "./common.scss"
+import "./app-list.scss"
 
 function getColumn(ctx) {
   return [
@@ -17,7 +20,7 @@ function getColumn(ctx) {
       render(rowdata) {
         return (
           <span>
-            <Link to={`/apps/${rowdata._id}`}>详情</Link>
+            <Link className="action" to={`/apps/${rowdata._id}`}>详情</Link>
           </span>
         )
       }
@@ -61,7 +64,7 @@ export class AppList extends React.Component<any, any>{
     this.setState({ dialogVisible })
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.load();
   }
 
@@ -85,8 +88,10 @@ export class AppList extends React.Component<any, any>{
     if (!data) return null;
 
     return (
-      <div>
-        <h2>APP列表</h2>
+      <div className="page page-app-list">
+        <Breadcrumb separator="/">
+          <Breadcrumb.Item>首页</Breadcrumb.Item>
+        </Breadcrumb>
         <div className="action-panel">
           <Button onClick={_ => this.newApp()}>创建APP</Button>
         </div>

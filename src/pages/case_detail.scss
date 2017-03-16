@@ -1,4 +1,4 @@
-.case-detail{
+.page-case-detail{
   .field-item{
     margin-bottom: 1em;
     display: flex;
@@ -8,15 +8,17 @@
       >label{
         display: block;
       }
-      max-width: 50em;
-      min-width: 40em;
+      width: 40em;
     }
 
     .tips{
       background-color: #efefef;
       color: deepskyblue;
-      padding: 2px 1em;
+      padding: 4px 1em;
       border-radius: 4px;
+      width: 20em;
+      margin-top: 1em;
+
     }
   }
 

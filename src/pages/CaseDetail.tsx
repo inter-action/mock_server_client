@@ -1,10 +1,13 @@
+import * as url from "url";
+
 import * as React from "react";
 import { axios, pub } from "../utils"
-import { Input, Select, Table, Button, MessageBox, Dialog } from "element-react";
+import { Input, Select, Table, Button, MessageBox, Dialog, Breadcrumb } from "element-react";
 import { ValidateInput } from "../components/index";
 import { Link, } from "react-router-dom";
 
 
+import "./common.scss"
 import "./case_detail.scss";
 
 const validators = {
@@ -50,6 +53,7 @@ const responseTypeOptions = [{
 
 const request = axios.get();
 export class CaseDetail extends React.Component<any, any>{
+  _appid: any;
   _backup: any;
   _id: any;
   _serverData: any;
@@ -57,6 +61,9 @@ export class CaseDetail extends React.Component<any, any>{
   constructor(props) {
     super(props);
     this._serverData = props.serverData;
+    let urlObj = url.parse(location.href, true);
+    if (!urlObj.query.appid) throw new Error("appid is required");
+    this._appid = urlObj.query.appid;
     this._id = this.props.match.params.id;
 
     this.state = {
@@ -65,15 +72,15 @@ export class CaseDetail extends React.Component<any, any>{
       query: { value: "{}", isvalid: true },
       body: { value: "{}", isvalid: true },
       responseType: "json",
-      response: { value: "{}", isvalid: true }
+      response: { value: "{}", isvalid: true },
+      isEdit: true
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (this._id) {
       this.load()
     }
-    this.load();
   }
 
   delete(id) {
@@ -120,7 +127,8 @@ export class CaseDetail extends React.Component<any, any>{
   load() {
     request.get(`/cases/${this._id}`).then(resp => {
       this._backup = resp.data;
-      this.setState(this.convertFrom(resp.data));
+      this._appid = resp.data.app._id;
+      this.setState(Object.assign(this.convertFrom(resp.data), { isEdit: false }));
     }).catch(pub.handleAjaxRequestError)
   }
 
@@ -128,13 +136,17 @@ export class CaseDetail extends React.Component<any, any>{
     if (document.querySelectorAll(".invalid").length !== 0) return;
 
     if (!this._id) {
-      request.post(`/cases`).then(resp => {
+      let data: any = this.convertBack(this.state);
+      data.appid = this._appid;
+      request.post(`/cases`, data).then(resp => {
+        pub.success("操作成功");
         this._id = resp.data._id;
         this._backup = resp.data;
         this.setState(Object.assign(this.convertFrom(this._backup), { isEdit: false }))//refresh view
       }).catch(pub.handleAjaxRequestError)
     } else {
       request.put(`/cases/${this._id}`, this.convertBack(this.state)).then(resp => {
+        pub.success("操作成功");
         this.setState({ isEdit: false })
       }).catch(pub.handleAjaxRequestError)
     }
@@ -195,6 +207,9 @@ export class CaseDetail extends React.Component<any, any>{
                 autosize={{ minRows: 5, maxRows: 8 }}
                 data={query} onChange={d => this.setState({ query: d })} validator={validators.isJSON} disabled={!isEdit}></ValidateInput>
             </div>
+            <div className="tips">
+              get 请求参数: JSON 格式, 实际mock接口不区分JSON亦或者Form, 空JSON ·{}· match 所有对应route
+            </div>
           </div>
         )
       } else if (method == "post" || method == "put") {
@@ -207,6 +222,9 @@ export class CaseDetail extends React.Component<any, any>{
                 autosize={{ minRows: 5, maxRows: 8 }}
                 data={body} onChange={d => this.setState({ body: d })} validator={validators.isJSON} disabled={!isEdit}></ValidateInput>
             </div>
+            <div className="tips">
+              post 请求参数: JSON 格式, 实际mock接口不区分JSON亦或者Form,  空JSON ·{}· match 所有对应route
+            </div>
           </div>
         )
       }
@@ -217,9 +235,15 @@ export class CaseDetail extends React.Component<any, any>{
       return `/_m/${appname}/${routePath.value}`
     }
 
+    const pageTitle = this._id ? "Case Detail" : "创建 Case"
+
     return (
-      <div className="case-detail">
-        <h2>APP Detail</h2>
+      <div className="page page-case-detail">
+        <Breadcrumb separator="/">
+          <Breadcrumb.Item><Link to="/">首页</Link></Breadcrumb.Item>
+          <Breadcrumb.Item><Link to={`/apps/${this._appid}`}>APP 详情</Link></Breadcrumb.Item>
+          <Breadcrumb.Item>{pageTitle}</Breadcrumb.Item>
+        </Breadcrumb>
         <div className="field-item">
           {editSection()}
         </div>

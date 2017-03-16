@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom";
 import {
   Route,
   Switch,
-  HashRouter,
+  BrowserRouter,
   // etc.
 } from "react-router-dom";
 import { Provider } from "react-redux";
@@ -18,13 +18,14 @@ import { AppList, AppShell, AppDetail, CaseDetail } from "../pages"
 export function getRoutes() {
   return (
     <Provider store={redux.getStore()}>
-      <HashRouter>
+      <BrowserRouter>
         <Switch>
           <AppShell exact strict path="/" component={AppList} />
           <AppShell path="/apps/:id" component={AppDetail} />
           <AppShell path="/cases/:id" component={CaseDetail} />
+          <AppShell path="/cases" component={CaseDetail} />
         </Switch>
-      </HashRouter>
+      </BrowserRouter>
     </Provider>
   )
 }

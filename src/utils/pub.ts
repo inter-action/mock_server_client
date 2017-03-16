@@ -72,9 +72,9 @@ export function success(message: string, title?: string) {
 }
 
 export function handleAjaxRequestError(e) {
-  if (e && e.message) {
-    error(e.message)
-  } else {
+  try {
+    error(e.response.data.message)
+  } catch (e) {
     error("数据请求失败，请稍后再试")
   }
 }
